@@ -123,11 +123,13 @@ html, body, [class*="css"]  {
 }
 [data-testid="stSidebar"] label,
 [data-testid="stSidebar"] p,
-[data-testid="stSidebar"] span {
+[data-testid="stSidebar"] span 
+}
+/* FIX RADIO BUTTON TEXT (Navigation) */
+[data-testid="stSidebar"] .stRadio label {
     color: #E2E8F0 !important;
+    font-weight: 500 !important;
 }
-}
-
 /* ===== FILE UPLOADER BUTTON ===== */
 [data-testid="stFileUploader"] button {
     background: linear-gradient(135deg, #3B82F6, #6366F1) !important;
