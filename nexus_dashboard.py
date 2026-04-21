@@ -125,6 +125,27 @@ html, body, [class*="css"]  {
 [data-testid="stSidebar"] p,
 [data-testid="stSidebar"] span 
 }
+/* ===== RADIO BUTTON LABELS (ALL OPTIONS) ===== */
+[data-testid="stSidebar"] .stRadio label {
+    color: #CBD5F5 !important;   /* light blue-gray */
+    font-weight: 500 !important;
+    opacity: 0.9;
+}
+
+/* ===== SELECTED OPTION (HIGHLIGHT) ===== */
+[data-testid="stSidebar"] .stRadio div[role="radiogroup"] label[data-checked="true"] {
+    color: #FFFFFF !important;
+    font-weight: 700 !important;
+    background: rgba(59, 130, 246, 0.15);  /* soft blue highlight */
+    border-radius: 8px;
+    padding: 6px 10px;
+}
+
+/* ===== RADIO DOT (SELECTED) ===== */
+[data-testid="stSidebar"] .stRadio div[role="radiogroup"] label[data-checked="true"]::before {
+    background-color: #3B82F6 !important;  /* blue dot */
+    border-color: #3B82F6 !important;
+}
 /* FIX RADIO BUTTON TEXT (Navigation) */
 [data-testid="stSidebar"] .stRadio label {
     color: #E2E8F0 !important;
