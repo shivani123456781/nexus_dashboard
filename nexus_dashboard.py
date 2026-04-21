@@ -123,7 +123,9 @@ html, body, [class*="css"]  {
 }
 [data-testid="stSidebar"] label,
 [data-testid="stSidebar"] p,
-[data-testid="stSidebar"] span 
+[data-testid="stSidebar"] span {
+    color: #E2E8F0 !important;
+}
 }
 
 /* ===== FILE UPLOADER BUTTON ===== */
