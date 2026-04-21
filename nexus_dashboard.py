@@ -125,6 +125,19 @@ html, body, [class*="css"]  {
 [data-testid="stSidebar"] p,
 [data-testid="stSidebar"] span 
 }
+/* FORCE SIDEBAR BACK INTO VIEW */
+section[data-testid="stSidebar"] {
+    transform: translateX(0px) !important;
+    margin-left: 0px !important;
+}
+
+/* MAKE SURE TOGGLE BUTTON IS VISIBLE */
+[data-testid="collapsedControl"] {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    z-index: 9999 !important;
+}
 /* ===== FILE UPLOADER BUTTON ===== */
 [data-testid="stFileUploader"] button {
     background: linear-gradient(135deg, #3B82F6, #6366F1) !important;
