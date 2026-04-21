@@ -122,7 +122,7 @@ html, body, [class*="css"]  {
     background: linear-gradient(180deg, #0F172A 0%, #1E293B 100%);
 }
 [data-testid="stSidebar"] * {
-    color: #E2E8F0 !important;
+    color: #2563EB !important;
 }
 [data-testid="stSidebar"] h1,
 [data-testid="stSidebar"] h2,
