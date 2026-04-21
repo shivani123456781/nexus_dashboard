@@ -132,6 +132,9 @@ html, body, [class*="css"]  {
     border-radius: 10px !important;
     border: none !important;
 }
+[data-testid="stFileUploader"] button:hover {
+    background: linear-gradient(135deg, #2563EB, #4F46E5) !important;
+}
 /* ===== DOWNLOAD BUTTON ===== */
 [data-testid="stDownloadButton"] button {
     background: linear-gradient(135deg, #3B82F6, #6366F1) !important;
