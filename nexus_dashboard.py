@@ -125,23 +125,7 @@ html, body, [class*="css"]  {
 [data-testid="stSidebar"] p,
 [data-testid="stSidebar"] span 
 }
-/* FORCE SIDEBAR BACK INTO VIEW */
-section[data-testid="stSidebar"] {
-    transform: translateX(0px) !important;
-    margin-left: 0px !important;
-}
 
-/* MAKE SURE TOGGLE BUTTON IS VISIBLE */
-[data-testid="collapsedControl"] {
-    display: block !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-    z-index: 9999 !important;
-}
-/* Ensure sidebar can be restored */
-section[data-testid="stSidebar"] {
-    transition: transform 0.3s ease;
-}
 /* ===== FILE UPLOADER BUTTON ===== */
 [data-testid="stFileUploader"] button {
     background: linear-gradient(135deg, #3B82F6, #6366F1) !important;
@@ -161,12 +145,7 @@ section[data-testid="stSidebar"] {
     border-radius: 10px !important;
     border: none !important;
 }
-/* FIX YOUR CURRENT ISSUE */
-[data-testid="stSidebar"] label,
-[data-testid="stSidebar"] p,
-[data-testid="stSidebar"] span {
-    color: #E2E8F0 !important;
-}
+
 [data-testid="stSidebar"] h1,
 [data-testid="stSidebar"] h2,
 [data-testid="stSidebar"] h3 {
@@ -327,17 +306,6 @@ st.sidebar.markdown(
     """,
     unsafe_allow_html=True,
 )
-if st.button("☰ Open Filters"):
-    st.markdown(
-        """
-        <style>
-        section[data-testid="stSidebar"] {
-            transform: translateX(0px) !important;
-        }
-        </style>
-        """,
-        unsafe_allow_html=True
-    )
 
 uploaded = st.sidebar.file_uploader("Workbook (.xlsx)", type="xlsx")
 default_path = Path("academic_multi_school_dashboard_populated_10000.xlsx")
