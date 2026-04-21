@@ -125,10 +125,7 @@ html, body, [class*="css"]  {
 [data-testid="stSidebar"] p,
 [data-testid="stSidebar"] span 
 }
-/* Hide sidebar collapse button */
-[data-testid="collapsedControl"] {
-    display: none !important;
-}
+
 /* ===== FILE UPLOADER BUTTON ===== */
 [data-testid="stFileUploader"] button {
     background: linear-gradient(135deg, #3B82F6, #6366F1) !important;
