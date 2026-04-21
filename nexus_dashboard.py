@@ -124,6 +124,14 @@ html, body, [class*="css"]  {
 [data-testid="stSidebar"] * {
     color: #E2E8F0 !important;
 }
+/* ===== DOWNLOAD BUTTON ===== */
+[data-testid="stDownloadButton"] button {
+    background: linear-gradient(135deg, #3B82F6, #6366F1) !important;
+    color: white !important;
+    font-weight: 600 !important;
+    border-radius: 10px !important;
+    border: none !important;
+}
 [data-testid="stSidebar"] h1,
 [data-testid="stSidebar"] h2,
 [data-testid="stSidebar"] h3 {
