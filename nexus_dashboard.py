@@ -140,6 +140,12 @@ html, body, [class*="css"]  {
     border-radius: 10px !important;
     border: none !important;
 }
+/* FIX YOUR CURRENT ISSUE */
+[data-testid="stSidebar"] label,
+[data-testid="stSidebar"] p,
+[data-testid="stSidebar"] span {
+    color: #E2E8F0 !important;
+}
 [data-testid="stSidebar"] h1,
 [data-testid="stSidebar"] h2,
 [data-testid="stSidebar"] h3 {
