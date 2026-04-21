@@ -121,8 +121,9 @@ html, body, [class*="css"]  {
 [data-testid="stSidebar"] {
     background: linear-gradient(180deg, #0F172A 0%, #1E293B 100%);
 }
-[data-testid="stSidebar"] * {
-    color: #E2E8F0 !important;
+[data-testid="stSidebar"] label,
+[data-testid="stSidebar"] p,
+[data-testid="stSidebar"] span 
 }
 /* ===== FILE UPLOADER BUTTON ===== */
 [data-testid="stFileUploader"] button {
