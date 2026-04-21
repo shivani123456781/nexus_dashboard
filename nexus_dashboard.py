@@ -138,6 +138,10 @@ section[data-testid="stSidebar"] {
     opacity: 1 !important;
     z-index: 9999 !important;
 }
+/* Ensure sidebar can be restored */
+section[data-testid="stSidebar"] {
+    transition: transform 0.3s ease;
+}
 /* ===== FILE UPLOADER BUTTON ===== */
 [data-testid="stFileUploader"] button {
     background: linear-gradient(135deg, #3B82F6, #6366F1) !important;
@@ -323,6 +327,17 @@ st.sidebar.markdown(
     """,
     unsafe_allow_html=True,
 )
+if st.button("☰ Open Filters"):
+    st.markdown(
+        """
+        <style>
+        section[data-testid="stSidebar"] {
+            transform: translateX(0px) !important;
+        }
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
 
 uploaded = st.sidebar.file_uploader("Workbook (.xlsx)", type="xlsx")
 default_path = Path("academic_multi_school_dashboard_populated_10000.xlsx")
