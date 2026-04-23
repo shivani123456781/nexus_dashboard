@@ -1680,7 +1680,7 @@ elif page == "Peer Comparison":
     c3.metric("Best Attendance", summary_all.sort_values("avg_att", ascending=False).iloc[0]["school"])
     # ======================
                      hover_name="school",
-                     title="Performance Benchmark (Attendance vs GPA)")
+                     title="Performance Benchmark (Attendance vs GPA)"
 
     st.plotly_chart(style_fig(fig, theme), use_container_width=True)
 
