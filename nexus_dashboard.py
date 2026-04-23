@@ -1677,12 +1677,23 @@ elif page == "Peer Comparison":
     c1.metric("Top School (GPA)", summary_all.sort_values("avg_gpa", ascending=False).iloc[0]["school"])
     c2.metric("Lowest Risk School", summary_all.sort_values("high_risk").iloc[0]["school"])
     c3.metric("Best Attendance", summary_all.sort_values("avg_att", ascending=False).iloc[0]["school"])
+
     # ======================
-                     hover_name="school",
-                     title="Performance Benchmark (Attendance vs GPA)"
+    # Performance Benchmark
+    # ======================
+    section("📊 Performance Benchmark")
+
+    fig = px.scatter(
+        summary_all,
+        x="avg_att",
+        y="avg_gpa",
+        size="avg_gpa",
+        color="high_risk",
+        hover_name="school",
+        title="Performance Benchmark (Attendance vs GPA)"
+    )
 
     st.plotly_chart(style_fig(fig, theme), use_container_width=True)
-
     # ======================
     # FINANCIAL COMPARISON
     # ======================
