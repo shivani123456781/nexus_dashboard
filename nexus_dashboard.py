@@ -364,21 +364,7 @@ if "fees_outstanding" in students.columns and "total_fees" in students.columns:
 
     return {"students": stu, "records": rec, "attendance": att,
             "teachers": teachers, "schools": schools, "principals": principals}
-    # =======================
-# 2. UPDATE build_views()
-# =======================
-# ADD inside build_views() after stu creation
-
-# Parent + Financial enrichment
-if "parent_occupation" in students.columns:
-    stu["parent_profession"] = students["parent_occupation"]
-
-if "parent_income_group" in students.columns:
-    stu["income_group"] = students["parent_income_group"]
-
-if "fees_outstanding" in students.columns and "total_fees" in students.columns:
-    stu["outstanding_pct"] = (students["fees_outstanding"] / students["total_fees"]) * 100
-
+  
 # ═══════════════════════════════════════════════════════════════════
 #  ML MODELS
 # ═══════════════════════════════════════════════════════════════════
