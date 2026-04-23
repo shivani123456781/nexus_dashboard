@@ -86,19 +86,8 @@ THEMES = {
         "palette": ["#0F766E", "#14B8A6", "#6366F1", "#8B5CF6", "#F59E0B", "#EC4899", "#10B981", "#3B82F6"],
         "scale":   [[0, "#F0FDFA"], [0.5, "#2DD4BF"], [1, "#134E4A"]],
     },
-# =======================
-# 1. NEW THEME
-# =======================
-"Peer Comparison": {
-    "icon": "⚖️",
-    "subtitle": "School benchmarking and comparative intelligence",
-    "primary": "#1D4ED8",
-    "accent": "#3B82F6",
-    "grad": ("#1E3A8A", "#2563EB"),
-    "palette": ["#1D4ED8","#2563EB","#60A5FA","#93C5FD","#BFDBFE"],
-    "scale": [[0, "#EFF6FF"], [0.5, "#60A5FA"], [1, "#1E3A8A"]],
-},
 }
+
 # ═══════════════════════════════════════════════════════════════════
 #  CSS — production polish, stronger axis contrast
 # ═══════════════════════════════════════════════════════════════════
@@ -308,6 +297,17 @@ def add_trendline(fig, x, y, *, color, name="Trend"):
     return fig
 
 
+# ═══════════════════════════════════════════════════════════════════
+#  DATA LAYER
+# ═══════════════════════════════════════════════════════════════════
+@st.cache_data(show_spinner="Loading workbook…")
+def load_workbook(src) -> dict:
+    sheets = pd.read_excel(src, sheet_name=None)
+    for n, f in sheets.items():
+        f.columns = f.columns.astype(str).str.strip().str.lower().str.replace(" ", "_")
+        sheets[n] = f
+    return sheets
+
 @st.cache_data(show_spinner="Building analytical views…")
 def build_views(sheets: dict) -> dict:
     schools  = sheets["Schools"].rename(columns={"school_name": "school"})
@@ -321,30 +321,9 @@ def build_views(sheets: dict) -> dict:
         schools[["school_id","school","board_name","region","state","city",
                  "school_type","management_type","student_capacity"]],
         on="school_id", how="left")
-
     stu["performance_index"] = (stu["current_gpa"].fillna(0)*25
                                 + stu["cumulative_attendance_pct"].fillna(0)*0.5)
-
     stu["age"] = 2026 - pd.to_datetime(stu["date_of_birth"], errors="coerce").dt.year
-
-    # =======================
-    # ✅ ADD YOUR CODE HERE (INDENTED)
-    # =======================
-
-    if "parent_occupation" in students.columns:
-        stu["parent_profession"] = students["parent_occupation"]
-
-    if "parent_income_group" in students.columns:
-        stu["income_group"] = students["parent_income_group"]
-
-    if "fees_outstanding" in students.columns and "total_fees" in students.columns:
-        stu["outstanding_pct"] = (
-            students["fees_outstanding"] / students["total_fees"]
-        ) * 100
-
-    # =======================
-    # EXISTING CODE CONTINUES
-    # =======================
 
     rec = (records.merge(students[["student_id","gender"]], on="student_id", how="left")
                   .merge(schools[["school_id","school","board_name","region"]],
@@ -358,15 +337,9 @@ def build_views(sheets: dict) -> dict:
     teachers = teachers.merge(schools[["school_id","school","region"]],
                               on="school_id", how="left")
 
-    return {
-        "students": stu,
-        "records": rec,
-        "attendance": att,
-        "teachers": teachers,
-        "schools": schools,
-        "principals": principals
-    }
-  
+    return {"students": stu, "records": rec, "attendance": att,
+            "teachers": teachers, "schools": schools, "principals": principals}
+
 # ═══════════════════════════════════════════════════════════════════
 #  ML MODELS
 # ═══════════════════════════════════════════════════════════════════
@@ -1647,105 +1620,6 @@ elif page == "Predictive Lab":
         insight(f"The isolation-forest flagged <b>{anom_count} students</b> (≈5%) "
                 f"whose GPA / attendance / grade combination is statistically unusual "
                 f"compared with peers. Good candidates for early counsellor review.")
-
-# =======================
-# ADD NEW PAGE
-# =======================
-elif page == "Peer Comparison":
-
-    # KPI SECTION
-    c1, c2, c3 = st.columns(3)
-
-    summary_all = stu.groupby("school").agg(
-        avg_gpa=("current_gpa","mean"),
-        avg_att=("cumulative_attendance_pct","mean"),
-        high_risk=("academic_risk_flag", lambda x: (x=="High").mean()*100)
-    ).reset_index()
-
-    c1.metric("Top School (GPA)", summary_all.sort_values("avg_gpa", ascending=False).iloc[0]["school"])
-    c2.metric("Lowest Risk School", summary_all.sort_values("high_risk").iloc[0]["school"])
-    c3.metric("Best Attendance", summary_all.sort_values("avg_att", ascending=False).iloc[0]["school"])
-
-    # ======================
-    # Performance Benchmark
-    # ======================
-    section("📊 Performance Benchmark")
-
-    fig = px.scatter(
-        summary_all,
-        x="avg_att",
-        y="avg_gpa",
-        size="avg_gpa",
-        color="high_risk",
-        hover_name="school",
-        title="Performance Benchmark (Attendance vs GPA)"
-    )
-
-    st.plotly_chart(style_fig(fig, theme), use_container_width=True)
-    # ======================
-    # FINANCIAL COMPARISON
-    # ======================
-    section("💰 Financial Comparison (Outstanding %)")
-
-    if "outstanding_pct" in stu.columns:
-        fin = stu.groupby("school")["outstanding_pct"].mean().reset_index()
-
-        fig = px.bar(fin,
-                     x="school",
-                     y="outstanding_pct",
-                     color="outstanding_pct",
-                     text_auto=".1f",
-                     title="Avg Outstanding Fees % by School")
-
-        st.plotly_chart(style_fig(fig, theme), use_container_width=True)
-    else:
-        st.warning("Financial data not available")
-
-    # ======================
-    # PARENT BACKGROUND
-    # ======================
-    section("👨‍👩‍👧 Student Background vs Performance")
-
-    if "parent_profession" in stu.columns:
-        prof = stu.groupby("parent_profession")["current_gpa"].mean().reset_index()
-
-        fig = px.bar(prof,
-                     x="parent_profession",
-                     y="current_gpa",
-                     color="parent_profession",
-                     title="Performance by Parent Profession")
-
-        st.plotly_chart(style_fig(fig, theme), use_container_width=True)
-
-    if "income_group" in stu.columns:
-        fig = px.box(stu,
-                     x="income_group",
-                     y="current_gpa",
-                     color="income_group",
-                     title="Performance Distribution by Income Group")
-
-        st.plotly_chart(style_fig(fig, theme), use_container_width=True)
-
-    # ======================
-    # HEATMAP
-    # ======================
-    section("🔥 Income vs Profession Impact")
-
-    if "income_group" in stu.columns and "parent_profession" in stu.columns:
-
-        pivot = stu.pivot_table(
-            index="parent_profession",
-            columns="income_group",
-            values="current_gpa",
-            aggfunc="mean"
-        )
-
-        fig = px.imshow(pivot,
-                        text_auto=".2f",
-                        color_continuous_scale=theme["scale"],
-                        title="GPA: Profession × Income Group")
-
-        st.plotly_chart(style_fig(fig, theme), use_container_width=True)
 
 
 # ═══════════════════════════════════════════════════════════════════
