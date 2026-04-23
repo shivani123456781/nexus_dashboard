@@ -308,17 +308,6 @@ def add_trendline(fig, x, y, *, color, name="Trend"):
     return fig
 
 
-# ═══════════════════════════════════════════════════════════════════
-#  DATA LAYER
-# ═══════════════════════════════════════════════════════════════════
-@st.cache_data(show_spinner="Loading workbook…")
-def load_workbook(src) -> dict:
-    sheets = pd.read_excel(src, sheet_name=None)
-    for n, f in sheets.items():
-        f.columns = f.columns.astype(str).str.strip().str.lower().str.replace(" ", "_")
-        sheets[n] = f
-    return sheets
-
 @st.cache_data(show_spinner="Building analytical views…")
 def build_views(sheets: dict) -> dict:
     schools  = sheets["Schools"].rename(columns={"school_name": "school"})
@@ -332,23 +321,30 @@ def build_views(sheets: dict) -> dict:
         schools[["school_id","school","board_name","region","state","city",
                  "school_type","management_type","student_capacity"]],
         on="school_id", how="left")
+
     stu["performance_index"] = (stu["current_gpa"].fillna(0)*25
                                 + stu["cumulative_attendance_pct"].fillna(0)*0.5)
+
     stu["age"] = 2026 - pd.to_datetime(stu["date_of_birth"], errors="coerce").dt.year
-   # =======================
-# 2. UPDATE build_views()
-# =======================
-# ADD inside build_views() after stu creation
 
-# Parent + Financial enrichment
-if "parent_occupation" in students.columns:
-    stu["parent_profession"] = students["parent_occupation"]
+    # =======================
+    # ✅ ADD YOUR CODE HERE (INDENTED)
+    # =======================
 
-if "parent_income_group" in students.columns:
-    stu["income_group"] = students["parent_income_group"]
+    if "parent_occupation" in students.columns:
+        stu["parent_profession"] = students["parent_occupation"]
 
-if "fees_outstanding" in students.columns and "total_fees" in students.columns:
-    stu["outstanding_pct"] = (students["fees_outstanding"] / students["total_fees"]) * 100
+    if "parent_income_group" in students.columns:
+        stu["income_group"] = students["parent_income_group"]
+
+    if "fees_outstanding" in students.columns and "total_fees" in students.columns:
+        stu["outstanding_pct"] = (
+            students["fees_outstanding"] / students["total_fees"]
+        ) * 100
+
+    # =======================
+    # EXISTING CODE CONTINUES
+    # =======================
 
     rec = (records.merge(students[["student_id","gender"]], on="student_id", how="left")
                   .merge(schools[["school_id","school","board_name","region"]],
@@ -362,8 +358,14 @@ if "fees_outstanding" in students.columns and "total_fees" in students.columns:
     teachers = teachers.merge(schools[["school_id","school","region"]],
                               on="school_id", how="left")
 
-    return {"students": stu, "records": rec, "attendance": att,
-            "teachers": teachers, "schools": schools, "principals": principals}
+    return {
+        "students": stu,
+        "records": rec,
+        "attendance": att,
+        "teachers": teachers,
+        "schools": schools,
+        "principals": principals
+    }
   
 # ═══════════════════════════════════════════════════════════════════
 #  ML MODELS
