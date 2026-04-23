@@ -89,7 +89,7 @@ THEMES = {
 # =======================
 # 1. NEW THEME
 # =======================
-THEMES["Peer Comparison"] = {
+"Peer Comparison": {
     "icon": "⚖️",
     "subtitle": "School benchmarking and comparative intelligence",
     "primary": "#1D4ED8",
