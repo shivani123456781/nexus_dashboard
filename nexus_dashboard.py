@@ -2609,7 +2609,7 @@ elif page == "Retention Intelligence":
             sample,
             x="cumulative_attendance_pct",
             y="current_gpa",
-        st.plotly_chart
+        st.plotly_chart)
 # ═══════════════════════════════════════════════════════════════════
 #  SIDEBAR FOOTER
 # ═══════════════════════════════════════════════════════════════════
