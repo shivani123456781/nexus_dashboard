@@ -449,8 +449,12 @@ def build_views(sheets: dict) -> dict:
     att["day_of_week"] = att["attendance_date"].dt.day_name()
     att["week"] = att["attendance_date"].dt.isocalendar().week
 
-    teachers = teachers.merge(schools[["school_id","school","region"]],
-                              on="school_id", how="left")
+   teachers = teachers.merge(
+    schools[["school_id","school","region"]],
+    on="school_id",
+    how="left"
+)
+
 # =====================================================
 # SYNTHETIC RETENTION INTELLIGENCE COLUMNS
 # =====================================================
@@ -510,15 +514,15 @@ if "cocurricular_category" not in stu.columns:
 if "activity_hours" not in stu.columns:
     stu["activity_hours"]=rng.integers(0,9,len(stu))
 
-        return {
-        "students": stu,
-        "records": rec,
-        "attendance": att,
-        "teachers": teachers,
-        "schools": schools,
-        "parents": parents,
-        "principals": principals
-    }
+return {
+    "students": stu,
+    "records": rec,
+    "attendance": att,
+    "teachers": teachers,
+    "schools": schools,
+    "parents": parents,
+    "principals": principals
+}
 # ═══════════════════════════════════════════════════════════════════
 #  ML MODELS
 # ═══════════════════════════════════════════════════════════════════
