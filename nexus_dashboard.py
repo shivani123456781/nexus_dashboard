@@ -455,7 +455,64 @@ def build_views(sheets: dict) -> dict:
     return {"students": stu, "records": rec, "attendance": att,
             "teachers": teachers, "schools": schools, "principals": principals,
             "parents": parents}
+# =====================================================
+# SYNTHETIC RETENTION INTELLIGENCE COLUMNS
+# =====================================================
+rng=np.random.default_rng(42)
 
+if "student_status" not in stu.columns:
+    risk_num=(stu["academic_risk_flag"]=="High").astype(int)
+    low_att=(stu["cumulative_attendance_pct"]<70).astype(int)
+    p_drop=np.clip(0.02+risk_num*0.15+low_att*0.10,0,0.35)
+    dropped=rng.binomial(1,p_drop)
+    stu["student_status"]=np.where(dropped==1,"Dropped","Active")
+
+if "dropout_risk_score" not in stu.columns:
+    stu["dropout_risk_score"]=(
+        (4-stu["current_gpa"])*18 +
+        (100-stu["cumulative_attendance_pct"])*0.8 +
+        rng.normal(0,5,len(stu))
+    ).clip(0,100)
+
+if "reenrollment_flag" not in stu.columns:
+    p=np.clip(0.75+(stu["current_gpa"]-2.5)*0.06,0.45,0.98)
+    stu["reenrollment_flag"]=np.where(
+        rng.random(len(stu))<p,
+        "Retained",
+        "Not Retained"
+    )
+
+if "sibling_count" not in stu.columns:
+    stu["sibling_count"]=rng.choice(
+        [0,1,2,3],
+        size=len(stu),
+        p=[0.42,0.36,0.17,0.05]
+    )
+
+if "family_id" not in stu.columns:
+    stu["family_id"]=[f"F{1000+i//2}" for i in range(len(stu))]
+
+if "transfer_flag" not in stu.columns:
+    stu["transfer_flag"]=rng.choice(
+        ["No","Transfer In","Transfer Out"],
+        len(stu),
+        p=[0.86,0.07,0.07]
+    )
+
+if "transfer_reason" not in stu.columns:
+    reasons=["Relocation","Academic","Financial","Discipline"]
+    stu["transfer_reason"]=np.where(
+        stu["transfer_flag"]=="No",
+        "None",
+        rng.choice(reasons,len(stu))
+    )
+
+if "cocurricular_category" not in stu.columns:
+    acts=["Sports","Arts","STEM Club","Music","Debate"]
+    stu["cocurricular_category"]=rng.choice(acts,len(stu))
+
+if "activity_hours" not in stu.columns:
+    stu["activity_hours"]=rng.integers(0,9,len(stu))
 
 # ═══════════════════════════════════════════════════════════════════
 #  ML MODELS
