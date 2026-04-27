@@ -2670,7 +2670,7 @@ fig.update_layout(
     margin=dict(t=85),
     legend=dict(
         x=0.02,
-        y=0.97
+        y=1
     ),
     legend_title_text=""
 )
