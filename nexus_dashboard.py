@@ -2629,6 +2629,182 @@ elif page == "Retention Intelligence":
             style_fig(fig,theme,height=420),
             use_container_width=True
         )
+# =====================================================
+# TAB 2 RETENTION
+# =====================================================
+with tab2:
+
+    section("Retention Cohort Curve")
+
+    cohort = (
+        fstu.groupby("grade_level")
+        ["reenrollment_flag"]
+        .apply(lambda x:(x=="Retained").mean()*100)
+        .reset_index(name="retention")
+        .sort_values("grade_level")
+    )
+
+    fig = px.line(
+        cohort,
+        x="grade_level",
+        y="retention",
+        markers=True,
+        title="Grade Progression Retention"
+    )
+
+    st.plotly_chart(
+        style_fig(fig,theme,height=420),
+        use_container_width=True
+    )
+
+    c1,c2 = st.columns(2)
+
+    school_ret = (
+        fstu.groupby("school")
+        ["reenrollment_flag"]
+        .apply(lambda x:(x=="Retained").mean()*100)
+        .reset_index(name="retention")
+    )
+
+    fig = px.bar(
+        school_ret,
+        x="school",
+        y="retention",
+        color="retention",
+        title="Retention by School"
+    )
+
+    c1.plotly_chart(
+        style_fig(fig,theme,height=400),
+        use_container_width=True
+    )
+
+
+    retention_driver=pd.DataFrame({
+        "factor":["Attendance","Scholarship","Activities","Sibling Support"],
+        "impact":[15,12,9,6]
+    })
+
+    fig=go.Figure(go.Waterfall(
+        x=retention_driver["factor"],
+        y=retention_driver["impact"]
+    ))
+
+    fig.update_layout(
+        title="Retention Driver Waterfall"
+    )
+
+    c2.plotly_chart(
+        fig,
+        use_container_width=True
+    )
+
+    caption("Retention trends by grade and school.")
+    # =====================================================
+# TAB 3 SIBLINGS + TRANSFERS
+# =====================================================
+with tab3:
+
+    section("Sibling Analytics")
+
+    c1,c2=st.columns(2)
+
+    fig = px.box(
+        fstu,
+        x="sibling_count",
+        y="current_gpa",
+        title="Sibling Count vs GPA"
+    )
+
+    c1.plotly_chart(
+        style_fig(fig,theme,height=400),
+        use_container_width=True
+    )
+
+
+    fam=(
+        fstu["sibling_count"]
+        .value_counts()
+        .sort_index()
+        .reset_index()
+    )
+
+    fam.columns=["siblings","students"]
+
+    fig=px.bar(
+        fam,
+        x="siblings",
+        y="students",
+        title="Family Enrollment Distribution"
+    )
+
+    c2.plotly_chart(
+        style_fig(fig,theme,height=400),
+        use_container_width=True
+    )
+
+
+    section("Transfer Analytics")
+
+    c1,c2=st.columns(2)
+
+    transfers=(
+        fstu["transfer_flag"]
+        .value_counts()
+        .reset_index()
+    )
+    transfers.columns=["type","count"]
+
+    fig=px.pie(
+        transfers,
+        names="type",
+        values="count",
+        hole=.55,
+        title="Transfer Mix"
+    )
+
+    c1.plotly_chart(
+        style_fig(fig,theme,height=400),
+        use_container_width=True
+    )
+
+
+    reasons=(
+        fstu[fstu["transfer_reason"]!="None"]
+        ["transfer_reason"]
+        .value_counts()
+        .reset_index()
+    )
+    reasons.columns=["reason","count"]
+
+    fig=px.bar(
+        reasons,
+        x="reason",
+        y="count",
+        title="Transfer Reasons"
+    )
+
+    c2.plotly_chart(
+        style_fig(fig,theme,height=400),
+        use_container_width=True
+    )
+
+
+    transfer_in=(fstu.transfer_flag=="Transfer In").sum()
+    transfer_out=(fstu.transfer_flag=="Transfer Out").sum()
+
+    net=transfer_in-transfer_out
+
+    fig=go.Figure(go.Indicator(
+        mode="gauge+number",
+        value=net,
+        title={'text':'Net Transfer Gain'}
+    ))
+
+    st.plotly_chart(
+        fig,
+        use_container_width=True
+    )
 # ═══════════════════════════════════════════════════════════════════
 #  SIDEBAR FOOTER
 # ═══════════════════════════════════════════════════════════════════
