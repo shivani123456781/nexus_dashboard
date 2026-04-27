@@ -2623,8 +2623,13 @@ fig = px.scatter(
     x="cumulative_attendance_pct",
     y="current_gpa",
     color="academic_risk_flag",
-    symbol="student_status",
-    size="dropout_risk_score"
+    trendline="ols",
+    color_discrete_map={
+        "Low":"#22C55E",
+        "Medium":"#F59E0B",
+        "High":"#EF4444"
+    },
+    title="Attendance vs GPA Risk Drivers"
 )
 
 st.plotly_chart(
