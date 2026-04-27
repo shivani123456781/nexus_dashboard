@@ -2604,12 +2604,20 @@ elif page == "Retention Intelligence":
         section("Churn Drivers")
         c1,c2=st.columns(2)
 
-        sample=fstu.sample(min(2500,len(fstu)),random_state=1)
-        fig=px.scatter(
-            sample,
-            x="cumulative_attendance_pct",
-            y="current_gpa",
-        st.plotly_chart)
+         # Fix for the scatter plot section
+    sample=fstu.sample(min(2500,len(fstu)),random_state=1)
+    fig=px.scatter(
+        sample,
+        x="cumulative_attendance_pct",
+        y="current_gpa",
+        # Add any additional parameters here
+    )  # Close the px.scatter() function call properly
+    
+    # Then call st.plotly_chart as a separate statement
+    st.plotly_chart(
+        style_fig(fig,theme,height=420),
+        use_container_width=True
+    )
 # ═══════════════════════════════════════════════════════════════════
 #  SIDEBAR FOOTER
 # ═══════════════════════════════════════════════════════════════════
