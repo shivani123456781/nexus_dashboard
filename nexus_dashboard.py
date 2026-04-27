@@ -2680,8 +2680,8 @@ fig.update_layout(
 
     legend=dict(
         orientation="h",
-        x=0.18,
-        y=1.10
+        x=1,
+        y=2
     ),
 
     legend_title_text=""
