@@ -2669,7 +2669,10 @@ fig = px.scatter(
 
 
 fig.update_layout(
-    margin=dict(t=150),
+    margin=dict(
+        t=100,
+    r=180
+    ),
 
     title=dict(
         text="Churn Risk Bubble Analysis",
@@ -2680,8 +2683,10 @@ fig.update_layout(
 
     legend=dict(
         orientation="h",
-        x=1,
-        y=2
+        x=1.02,
+        y=1,
+        xanchor="left",
+        yanchor="top"
     ),
 
     legend_title_text=""
