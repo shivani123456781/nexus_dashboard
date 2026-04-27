@@ -2653,7 +2653,18 @@ fig = px.scatter(
     symbol="student_status",
     size="dropout_risk_score",
     size_max=28,
-    title="Churn Risk Bubble Analysis",
+    title=dict(
+        "Churn Risk Bubble Analysis",
+        x=0.02,
+        y=0.95,
+        xanchor="left"
+    ),
+    legend=dict(
+        orientation="h",
+        x=0.18,
+        y=1.10
+    );
+margin=dict(t=150)
     hover_data=[
         "school",
         "grade_level",
