@@ -2676,7 +2676,7 @@ fig.update_layout(
 )
 
 c1.plotly_chart(
-    style_fig(fig,theme,height=450),
+    style_fig(fig,theme,height=480),
     use_container_width=True
 )
 
