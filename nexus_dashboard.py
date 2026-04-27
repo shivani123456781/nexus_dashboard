@@ -2805,6 +2805,147 @@ with tab3:
         fig,
         use_container_width=True
     )
+    # =====================================================
+# TAB 4 CO-CURRICULAR
+# =====================================================
+with tab4:
+
+    section("Activity Participation")
+
+    c1,c2=st.columns(2)
+
+    act=(
+        fstu["cocurricular_category"]
+        .value_counts()
+        .reset_index()
+    )
+
+    act.columns=["activity","count"]
+
+    fig=px.treemap(
+        act,
+        path=["activity"],
+        values="count",
+        title="Participation Mix"
+    )
+
+    c1.plotly_chart(
+        style_fig(fig,theme,height=420),
+        use_container_width=True
+    )
+
+
+    sample=fstu.sample(
+        min(2500,len(fstu)),
+        random_state=42
+    )
+
+    fig=px.scatter(
+        sample,
+        x="activity_hours",
+        y="current_gpa",
+        color="academic_risk_flag",
+        title="Activity Hours vs GPA"
+    )
+
+    c2.plotly_chart(
+        style_fig(fig,theme,height=420),
+        use_container_width=True
+    )
+
+
+    section("Engagement Radar")
+
+    radar=pd.DataFrame({
+      "Metric":["GPA","Attendance","Retention"],
+      "Participants":[
+          fstu.loc[
+             fstu.activity_hours>0,
+             "current_gpa"
+          ].mean(),
+
+          fstu.loc[
+             fstu.activity_hours>0,
+             "cumulative_attendance_pct"
+          ].mean(),
+
+          (
+           fstu.loc[
+             fstu.activity_hours>0,
+             "reenrollment_flag"
+           ]=="Retained"
+          ).mean()*100
+      ],
+
+      "NonParticipants":[
+          fstu.loc[
+            fstu.activity_hours==0,
+            "current_gpa"
+          ].mean(),
+
+          fstu.loc[
+            fstu.activity_hours==0,
+            "cumulative_attendance_pct"
+          ].mean(),
+
+          (
+           fstu.loc[
+             fstu.activity_hours==0,
+             "reenrollment_flag"
+           ]=="Retained"
+          ).mean()*100
+      ]
+    })
+
+    fig=go.Figure()
+
+    fig.add_trace(
+      go.Scatterpolar(
+        r=radar["Participants"],
+        theta=radar["Metric"],
+        fill="toself",
+        name="Participants"
+      )
+    )
+
+    fig.add_trace(
+      go.Scatterpolar(
+        r=radar["NonParticipants"],
+        theta=radar["Metric"],
+        fill="toself",
+        name="Non Participants"
+      )
+    )
+
+    fig.update_layout(
+       title="Engagement Impact Radar",
+       height=500
+    )
+
+    st.plotly_chart(
+        fig,
+        use_container_width=True
+    )
+
+
+    stability=(
+        .30*((fstu["reenrollment_flag"]=="Retained").mean()*100)
+       +.25*(100-(fstu["student_status"]=="Dropped").mean()*100)
+       +.20*fstu["cumulative_attendance_pct"].mean()
+       +.15*(fstu["activity_hours"]>0).mean()*100
+       +.10*(fstu["sibling_count"]>0).mean()*100
+    )
+
+    fig=go.Figure(go.Indicator(
+       mode='gauge+number',
+       value=stability,
+       title={'text':'Student Stability Index'}
+    ))
+
+    st.plotly_chart(
+       fig,
+       use_container_width=True
+    )
 # ═══════════════════════════════════════════════════════════════════
 #  SIDEBAR FOOTER
 # ═══════════════════════════════════════════════════════════════════
