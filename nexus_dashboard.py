@@ -2663,7 +2663,7 @@ fig = px.scatter(
         orientation="h",
         x=0.18,
         y=1.10
-    );
+    ),
 margin=dict(t=150)
     hover_data=[
         "school",
