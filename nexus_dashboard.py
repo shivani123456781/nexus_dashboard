@@ -2632,10 +2632,6 @@ fig = px.scatter(
     title="Attendance vs GPA Risk Drivers"
 )
 
-st.plotly_chart(
-    style_fig(fig,theme,height=420),
-    use_container_width=True
-)
 # =====================================================
 # TAB 2 RETENTION
 # =====================================================
