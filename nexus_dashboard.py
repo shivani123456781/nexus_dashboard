@@ -2618,10 +2618,7 @@ section("Churn Drivers")
 
 c1, c2 = st.columns(2)
 
-
-# ---------------------------
-# Scatter: Churn Risk Bubble
-# ---------------------------
+# -------- Scatter Bubble --------
 sample = fstu.sample(
     min(2500, len(fstu)),
     random_state=1
@@ -2634,12 +2631,58 @@ fig = px.scatter(
     color="academic_risk_flag",
     symbol="student_status",
     size="dropout_risk_score",
+    hover_data=[
+        "student_name",
+        "school",
+        "grade_level"
+    ],
     color_discrete_map={
         "Low":"#22C55E",
         "Medium":"#F59E0B",
         "High":"#EF4444"
     },
     title="Churn Risk Bubble Analysis"
+)
+
+fig.update_layout(
+    xaxis_title="Attendance %",
+    yaxis_title="GPA"
+)
+
+c1.plotly_chart(
+    style_fig(fig, theme, height=450),
+    use_container_width=True
+)
+
+
+# -------- Driver Bar Chart --------
+risk_driver = pd.DataFrame({
+    "Driver":[
+        "Low Attendance",
+        "Low GPA",
+        "Fee Delays",
+        "Low Activities",
+        "Transfers"
+    ],
+    "Impact":[82,76,58,44,30]
+})
+
+fig2 = px.bar(
+    risk_driver,
+    x="Impact",
+    y="Driver",
+    orientation="h",
+    color="Impact",
+    title="Top Churn Drivers"
+)
+
+c2.plotly_chart(
+    style_fig(fig2, theme, height=450),
+    use_container_width=True
+)
+
+caption(
+"Bubble chart highlights students at dropout risk; bar chart shows strongest churn drivers."
 )
 # =====================================================
 # TAB 2 RETENTION
