@@ -2622,17 +2622,15 @@ sample = fstu.sample(
     random_state=1
 )
 
-# Attendance vs GPA risk scatter
 fig = px.scatter(
     sample,
     x="cumulative_attendance_pct",
     y="current_gpa",
     color="academic_risk_flag",
-    trendline="ols",
     color_discrete_map={
-        "Low": "#22C55E",      # Green
-        "Medium": "#F59E0B",   # Orange
-        "High": "#EF4444"      # Red
+        "Low":"#22C55E",
+        "Medium":"#F59E0B",
+        "High":"#EF4444"
     },
     hover_data=[
         "student_status",
@@ -2642,10 +2640,9 @@ fig = px.scatter(
 )
 
 st.plotly_chart(
-    style_fig(fig, theme, height=420),
+    style_fig(fig,theme,height=420),
     use_container_width=True
 )
-
 # =====================================================
 # TAB 2 RETENTION
 # =====================================================
