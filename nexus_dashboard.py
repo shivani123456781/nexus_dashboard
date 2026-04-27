@@ -2603,7 +2603,7 @@ fig = px.funnel(
 )
 
 st.plotly_chart(
-    style_fig(fig,theme,height=420),
+    style_fig(fig,theme,height=450),
     use_container_width=True
 )
 
