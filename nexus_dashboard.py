@@ -510,9 +510,15 @@ if "cocurricular_category" not in stu.columns:
 if "activity_hours" not in stu.columns:
     stu["activity_hours"]=rng.integers(0,9,len(stu))
 
-    return {"students": stu, "records": rec, "attendance": att,
-            "teachers": teachers, "schools": schools, "principals": principals,
-            "parents": parents}
+        return {
+        "students": stu,
+        "records": rec,
+        "attendance": att,
+        "teachers": teachers,
+        "schools": schools,
+        "parents": parents,
+        "principals": principals
+    }
 # ═══════════════════════════════════════════════════════════════════
 #  ML MODELS
 # ═══════════════════════════════════════════════════════════════════
