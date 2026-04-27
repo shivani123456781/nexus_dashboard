@@ -2640,8 +2640,6 @@ sample["dropout_risk_score"] = (
     )
 ).clip(0,100)
 
-
-
 # ---------------------------
 # Risk Bubble Scatter
 # ---------------------------
@@ -2653,23 +2651,15 @@ fig = px.scatter(
     symbol="student_status",
     size="dropout_risk_score",
     size_max=28,
-    title=dict(
-        "Churn Risk Bubble Analysis",
-        x=0.02,
-        y=0.95,
-        xanchor="left"
-    ),
-    legend=dict(
-        orientation="h",
-        x=0.18,
-        y=1.10
-    ),
-margin=dict(t=150)
+
+    title="Churn Risk Bubble Analysis",
+
     hover_data=[
         "school",
         "grade_level",
         "dropout_risk_score"
     ],
+
     color_discrete_map={
         "Low":"#22C55E",
         "Medium":"#F59E0B",
@@ -2677,22 +2667,31 @@ margin=dict(t=150)
     }
 )
 
+
 fig.update_layout(
-    margin=dict(t=85),
-    legend=dict(
+    margin=dict(t=150),
+
+    title=dict(
+        text="Churn Risk Bubble Analysis",
         x=0.02,
-        y=1
+        y=0.95,
+        xanchor="left"
     ),
+
+    legend=dict(
+        orientation="h",
+        x=0.18,
+        y=1.10
+    ),
+
     legend_title_text=""
 )
+
 
 c1.plotly_chart(
     style_fig(fig,theme,height=480),
     use_container_width=True
 )
-
-
-
 # ---------------------------
 # Grade-wise Churn
 # ---------------------------
