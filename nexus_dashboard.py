@@ -2578,38 +2578,40 @@ elif page == "Retention Intelligence":
 # =====================================================
 # TAB 1 CHURN
 # =====================================================
-    section("Churn Funnel")
+section("Churn Funnel")
 
-    funnel_df = pd.DataFrame({
-        "Stage":[
-            "Admitted",
-            "Active",
-            "At Risk",
-            "Dropped"
-        ],
-        "Count":[
-            len(fstu),
-            len(fstu),
-            (fstu["academic_risk_flag"]=="High").sum(),
-            (fstu["student_status"]=="Dropped").sum()
-        ]
-    })
+funnel_df = pd.DataFrame({
+    "Stage":[
+        "Admitted",
+        "Active",
+        "At Risk",
+        "Dropped"
+    ],
+    "Count":[
+        len(fstu),
+        len(fstu),
+        (fstu["academic_risk_flag"]=="High").sum(),
+        (fstu["student_status"]=="Dropped").sum()
+    ]
+})
 
-    fig = px.funnel(
-        funnel_df,
-        x="Count",
-        y="Stage",
-        title="Student Lifecycle Funnel"
-    )
+fig = px.funnel(
+    funnel_df,
+    x="Count",
+    y="Stage",
+    title="Student Lifecycle Funnel"
+)
 
-    st.plotly_chart(
-        style_fig(fig, theme, height=420),
-        use_container_width=True
-    )
+st.plotly_chart(
+    style_fig(fig,theme,height=420),
+    use_container_width=True
+)
 
-    caption(
-        "Shows leakage from enrollment to churn."
-    )
+caption(
+    "Shows leakage from enrollment to churn."
+)
+
+
 
 # ===========================
 # Churn Drivers
@@ -2618,22 +2620,44 @@ section("Churn Drivers")
 
 c1, c2 = st.columns(2)
 
+
+# ---------------------------
+# Sample Students
+# ---------------------------
 sample = fstu.sample(
     min(2600,len(fstu)),
     random_state=1
 )
 
+
+# ---------------------------
+# Derived Dropout Risk Score
+# ---------------------------
+sample["dropout_risk_score"] = (
+    (
+      (100-sample["cumulative_attendance_pct"])*0.5 +
+      (4-sample["current_gpa"])*20
+    )
+).clip(0,100)
+
+
+
+# ---------------------------
+# Risk Bubble Scatter
+# ---------------------------
 fig = px.scatter(
     sample,
     x="cumulative_attendance_pct",
     y="current_gpa",
     color="academic_risk_flag",
     symbol="student_status",
-    size_max=18,   # removed dropout_risk_score
-    title="Churn Risk Analysis",
+    size="dropout_risk_score",
+    size_max=28,
+    title="Churn Risk Bubble Analysis",
     hover_data=[
         "school",
-        "grade_level"
+        "grade_level",
+        "dropout_risk_score"
     ],
     color_discrete_map={
         "Low":"#22C55E",
@@ -2642,8 +2666,56 @@ fig = px.scatter(
     }
 )
 
+fig.update_layout(
+    margin=dict(t=85),
+    legend=dict(
+        x=0.02,
+        y=0.97
+    ),
+    legend_title_text=""
+)
+
 c1.plotly_chart(
     style_fig(fig,theme,height=450),
+    use_container_width=True
+)
+
+
+
+# ---------------------------
+# Grade-wise Churn
+# ---------------------------
+grade_churn = (
+    fstu.groupby("grade_level")
+    .agg({
+        "student_status":
+            lambda x:
+            (x=="Dropped").mean()*100
+    })
+    .reset_index()
+)
+
+grade_churn.columns=[
+    "grade_level",
+    "churn_rate"
+]
+
+fig2 = px.bar(
+    grade_churn,
+    x="grade_level",
+    y="churn_rate",
+    color="churn_rate",
+    color_continuous_scale="Reds",
+    title="Grade-wise Churn %"
+)
+
+fig2.update_traces(
+    texttemplate="%{y:.1f}",
+    textposition="outside"
+)
+
+c2.plotly_chart(
+    style_fig(fig2,theme,height=450),
     use_container_width=True
 )
 # =====================================================
