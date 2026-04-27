@@ -2539,7 +2539,77 @@ elif page == "Predictive Lab":
                 f"whose GPA / attendance / grade combination is statistically unusual "
                 f"compared with peers. Good candidates for early counsellor review.")
 
+# =====================================================
+# PAGE: RETENTION INTELLIGENCE
+# =====================================================
+elif page == "Retention Intelligence":
 
+    churn_rate=(fstu["student_status"]=="Dropped").mean()*100
+    retention=(fstu["reenrollment_flag"]=="Retained").mean()*100
+    transfer_out=(fstu["transfer_flag"]=="Transfer Out").sum()
+    participation=(fstu["activity_hours"]>0).mean()*100
+
+    c1,c2,c3,c4,c5=st.columns(5)
+    c1.metric("Churn %",f"{churn_rate:.1f}%")
+    c2.metric("Retention %",f"{retention:.1f}%")
+    c3.metric("Transfer Out",int(transfer_out))
+    c4.metric("Activity Participation",f"{participation:.1f}%")
+    c5.metric(
+        "Sibling Students",
+        int((fstu['sibling_count']>0).sum())
+    )
+
+    tab1,tab2,tab3,tab4=st.tabs([
+        "🔁 Churn",
+        "🎯 Retention",
+        "👨‍👩‍👧 Siblings & Transfers",
+        "🏅 Co-curricular"
+    ])
+
+# =====================================================
+# TAB 1 CHURN
+# =====================================================
+    with tab1:
+
+        section("Churn Funnel")
+        funnel_df=pd.DataFrame({
+            "Stage":[
+                "Admitted",
+                "Active",
+                "At Risk",
+                "Dropped"
+            ],
+            "Count":[
+                len(fstu),
+                len(fstu),
+                (fstu['academic_risk_flag']=='High').sum(),
+                (fstu['student_status']=='Dropped').sum()
+            ]
+        })
+
+        fig=px.funnel(
+            funnel_df,
+            x="Count",
+            y="Stage",
+            title="Student Lifecycle Funnel"
+        )
+        st.plotly_chart(
+            style_fig(fig,theme,height=420),
+            use_container_width=True
+        )
+        caption(
+            "Shows leakage from enrollment to churn."
+        )
+
+        section("Churn Drivers")
+        c1,c2=st.columns(2)
+
+        sample=fstu.sample(min(2500,len(fstu)),random_state=1)
+        fig=px.scatter(
+            sample,
+            x="cumulative_attendance_pct",
+            y="current_gpa",
+        st.plotly_chart
 # ═══════════════════════════════════════════════════════════════════
 #  SIDEBAR FOOTER
 # ═══════════════════════════════════════════════════════════════════
