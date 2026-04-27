@@ -2634,60 +2634,12 @@ fig = px.scatter(
     color="academic_risk_flag",
     symbol="student_status",
     size="dropout_risk_score",
-    hover_data=[
-        "grade_level",
-        "student_status"
-    ],
     color_discrete_map={
-        "Low": "#22C55E",
-        "Medium": "#F59E0B",
-        "High": "#EF4444"
+        "Low":"#22C55E",
+        "Medium":"#F59E0B",
+        "High":"#EF4444"
     },
     title="Churn Risk Bubble Analysis"
-)
-
-c1.plotly_chart(
-    style_fig(fig, theme, height=420),
-    use_container_width=True
-)
-
-
-# ---------------------------
-# Grade-wise Churn
-# ---------------------------
-grade_churn = (
-    fstu.groupby("grade_level")
-    .agg({
-        "student_status":
-            lambda x:
-            (x=="Dropped").mean()*100
-    })
-    .reset_index()
-)
-
-grade_churn.columns = [
-    "grade_level",
-    "churn_rate"
-]
-
-
-fig = px.bar(
-    grade_churn,
-    x="grade_level",
-    y="churn_rate",
-    color="churn_rate",
-    color_continuous_scale="Reds",
-    title="Grade-wise Churn %"
-)
-
-fig.update_traces(
-    texttemplate="%{y:.1f}",
-    textposition="outside"
-)
-
-c2.plotly_chart(
-    style_fig(fig, theme, height=420),
-    use_container_width=True
 )
 # =====================================================
 # TAB 2 RETENTION
