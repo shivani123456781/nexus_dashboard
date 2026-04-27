@@ -150,6 +150,19 @@ THEMES = {
         "palette": ["#0F766E", "#14B8A6", "#6366F1", "#8B5CF6", "#F59E0B", "#EC4899", "#10B981", "#3B82F6"],
         "scale":   [[0, "#F0FDFA"], [0.5, "#2DD4BF"], [1, "#134E4A"]],
     },
+    "Retention Intelligence": {
+    "icon": "🔁",
+    "subtitle": "Churn, retention, transfers and student engagement risk",
+    "objective": (
+        "Track student attrition risk, retention drivers, sibling influence, "
+        "transfer movement and co-curricular impact on engagement."
+    ),
+    "primary": "#2563EB",
+    "accent": "#06B6D4",
+    "grad": ("#1D4ED8", "#0891B2"),
+    "palette": ["#2563EB","#06B6D4","#14B8A6","#8B5CF6","#F59E0B","#EF4444"],
+    "scale": [[0,"#DBEAFE"],[0.5,"#60A5FA"],[1,"#1E3A8A"]],
+    },
 }
 
 # ═══════════════════════════════════════════════════════════════════
