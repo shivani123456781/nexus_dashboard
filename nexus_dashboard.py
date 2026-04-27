@@ -2619,7 +2619,7 @@ section("Churn Drivers")
 c1, c2 = st.columns(2)
 
 sample = fstu.sample(
-    min(2500,len(fstu)),
+    min(2600,len(fstu)),
     random_state=1
 )
 
