@@ -2572,6 +2572,7 @@ elif page == "Retention Intelligence":
     with tab1:
 
         section("Churn Funnel")
+        # Make sure fstu is defined before this point in your actual code
         funnel_df=pd.DataFrame({
             "Stage":[
                 "Admitted",
@@ -2604,20 +2605,21 @@ elif page == "Retention Intelligence":
         section("Churn Drivers")
         c1,c2=st.columns(2)
 
-         # Fix for the scatter plot section
-    sample=fstu.sample(min(2500,len(fstu)),random_state=1)
-    fig=px.scatter(
-        sample,
-        x="cumulative_attendance_pct",
-        y="current_gpa",
-        # Add any additional parameters here
-    )  # Close the px.scatter() function call properly
-    
-    # Then call st.plotly_chart as a separate statement
-    st.plotly_chart(
-        style_fig(fig,theme,height=420),
-        use_container_width=True
-    )
+        # Fix for the scatter plot section
+        # Using fstu instead of stu which is not defined
+        sample=fstu.sample(min(2500,len(fstu)),random_state=1)
+        fig=px.scatter(
+            sample,
+            x="cumulative_attendance_pct",
+            y="current_gpa",
+            # Add any additional parameters here
+        )  # Close the px.scatter() function call properly
+        
+        # Then call st.plotly_chart as a separate statement
+        st.plotly_chart(
+            style_fig(fig,theme,height=420),
+            use_container_width=True
+        )
 # ═══════════════════════════════════════════════════════════════════
 #  SIDEBAR FOOTER
 # ═══════════════════════════════════════════════════════════════════
