@@ -451,10 +451,6 @@ def build_views(sheets: dict) -> dict:
 
     teachers = teachers.merge(schools[["school_id","school","region"]],
                               on="school_id", how="left")
-
-    return {"students": stu, "records": rec, "attendance": att,
-            "teachers": teachers, "schools": schools, "principals": principals,
-            "parents": parents}
 # =====================================================
 # SYNTHETIC RETENTION INTELLIGENCE COLUMNS
 # =====================================================
@@ -514,6 +510,9 @@ if "cocurricular_category" not in stu.columns:
 if "activity_hours" not in stu.columns:
     stu["activity_hours"]=rng.integers(0,9,len(stu))
 
+    return {"students": stu, "records": rec, "attendance": att,
+            "teachers": teachers, "schools": schools, "principals": principals,
+            "parents": parents}
 # ═══════════════════════════════════════════════════════════════════
 #  ML MODELS
 # ═══════════════════════════════════════════════════════════════════
