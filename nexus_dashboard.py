@@ -2615,61 +2615,74 @@ with tab1:
 
 
     # ===========================
-    # Churn Drivers
-    # ===========================
-    section("Churn Drivers")
+# Churn Drivers
+# ===========================
+section("Churn Drivers")
 
-    c1, c2 = st.columns(2)
-
-    sample = fstu.sample(
-        min(2500, len(fstu)),
-        random_state=1
-    )
-
-    fig = px.scatter(
-        sample,
-        x="cumulative_attendance_pct",
-        y="current_gpa",
-        color="academic_risk_flag",
-        symbol="student_status",
-        size="dropout_risk_score",
-        color_discrete_map={
-            "Low":"#22C55E",
-            "Medium":"#F59E0B",
-            "High":"#EF4444"
-        },
-        title="Churn Risk Bubble Analysis"
-    )
-
-    c1.plotly_chart(
-        style_fig(fig, theme, height=420),
-        use_container_width=True
-    )
+c1, c2 = st.columns(2)
 
 
-    # Optional second visual for c2
-    grade_churn = (
-        fstu.groupby("grade_level")
-        .apply(
-            lambda d:
-            (d["student_status"]=="Dropped").mean()*100,
-            include_groups=False
+# ---------------------------
+# Scatter: Churn Risk Bubble
+# ---------------------------
+sample = fstu.sample(
+    min(2500, len(fstu)),
+    random_state=1
+)
+
+fig = px.scatter(
+    sample,
+    x="cumulative_attendance_pct",
+    y="current_gpa",
+    color="academic_risk_flag",
+    symbol="student_status",
+    size="dropout_risk_score",
+    hover_data=[
+        "grade_level",
+        "student_status"
+    ],
+    color_discrete_map={
+        "Low":"#22C55E",
+        "Medium":"#F59E0B",
+        "High":"#EF4444"
+    },
+    title="Churn Risk Bubble Analysis"
+)
+
+c1.plotly_chart(
+    style_fig(fig, theme, height=420),
+    use_container_width=True
+)
+
+
+# ---------------------------
+# Grade-wise Churn
+# ---------------------------
+grade_churn = (
+    fstu.groupby("grade_level")
+    .agg(
+        churn_rate=(
+            "student_status",
+            lambda x: (x=="Dropped").mean()*100
         )
-        .reset_index(name="churn_rate")
     )
+    .reset_index()
+)
 
-    fig = px.bar(
-        grade_churn,
-        x="grade_level",
-        y="churn_rate",
-        color="churn_rate",
-        title="Grade-wise Churn"
-    )
+fig = px.bar(
+    grade_churn,
+    x="grade_level",
+    y="churn_rate",
+    text_auto=".1f",
+    color="churn_rate",
+    color_continuous_scale="Reds",
+    title="Grade-wise Churn %"
+)
 
-    c2.plotly_chart(
-        style_fig(fig, theme, height=420),
-        use_container_width=True
-    )
+c2.plotly_chart(
+    style_fig(fig, theme, height=420),
+    use_container_width=True
+)
 # =====================================================
 # TAB 2 RETENTION
 # =====================================================
