@@ -2616,8 +2616,13 @@ elif page == "Retention Intelligence":
 
         # Fix for the scatter plot section
         # Using fstu instead of stu which is not defined
-        sample=fstu.sample(min(2500,len(fstu)),random_state=1)
+        # Sample students for performance
+sample = fstu.sample(
+    min(2500, len(fstu)),
+    random_state=1
+)
 
+# Attendance vs GPA risk scatter
 fig = px.scatter(
     sample,
     x="cumulative_attendance_pct",
@@ -2625,11 +2630,20 @@ fig = px.scatter(
     color="academic_risk_flag",
     trendline="ols",
     color_discrete_map={
-        "Low":"#22C55E",
-        "Medium":"#F59E0B",
-        "High":"#EF4444"
+        "Low": "#22C55E",      # Green
+        "Medium": "#F59E0B",   # Orange
+        "High": "#EF4444"      # Red
     },
+    hover_data=[
+        "student_status",
+        "grade_level"
+    ],
     title="Attendance vs GPA Risk Drivers"
+)
+
+st.plotly_chart(
+    style_fig(fig, theme, height=420),
+    use_container_width=True
 )
 
 # =====================================================
