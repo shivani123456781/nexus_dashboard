@@ -2578,6 +2578,7 @@ elif page == "Retention Intelligence":
 # =====================================================
 # TAB 1 CHURN
 # =====================================================
+with tab1:
 section("Churn Funnel")
 
 funnel_df = pd.DataFrame({
